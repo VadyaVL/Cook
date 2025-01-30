@@ -10,6 +10,7 @@
 
 .user-details__information {
     margin-left: 16px;
+    flex: 1 1 0;
 }
 
 .user-details__information > span {

@@ -136,6 +136,12 @@ class DummyApiService {
 
         return responseResult;
     };
+
+    public getAllRecipes = async (): Promise<IRecipeModel[]> => {
+        const result = await this.getRecipeList('', '', 1000, 0);
+
+        return result.recipes;
+    };
 }
 
 export const dummyApiServiceInstance = new DummyApiService();

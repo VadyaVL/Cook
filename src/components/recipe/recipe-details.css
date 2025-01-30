@@ -10,6 +10,7 @@
 
 .recipe-details__information {
     margin-left: 16px;
+    flex: 1 1 0;
 }
 
 .recipe-details__information > span {
