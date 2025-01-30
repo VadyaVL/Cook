@@ -12,10 +12,10 @@ type RecipeListSliceType = {
     error: string | undefined;
 };
 
-export const getRecipeList = createAsyncThunk<any, { limit: number; skip: number; }>(
+export const getRecipeList = createAsyncThunk<any, { searchTerm: string, limit: number; skip: number; }>(
     'getRecipeList',
-    async ({ limit, skip }, thunkAPI) => {
-        const recipeList = await dummyApiServiceInstance.getRecipeList(limit, skip);
+    async ({ searchTerm, limit, skip }, thunkAPI) => {
+        const recipeList = await dummyApiServiceInstance.getRecipeList(searchTerm, limit, skip);
         return thunkAPI.fulfillWithValue(recipeList)
     }
 );

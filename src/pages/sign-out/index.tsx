@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { Page } from '../../components/page';
 import { signOut } from '../../redux/slices/account';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 
@@ -23,9 +24,8 @@ export const SignOutPage: FC<IProps> = ({
     }, [navigate, isAuthorized]);
 
     return (
-        <div>
-            Sign out
-            <button onClick={() => dispatch(signOut())}>Вихід</button>
-        </div>
+        <Page title='Ви бажаєте вийти з системи?'>
+            <button className='btn-mui' onClick={() => dispatch(signOut())}>Так, вийти!</button>
+        </Page>
     );
 };

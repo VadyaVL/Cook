@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Page } from '../../components/page';
 
 interface IProps {
 
@@ -8,6 +9,6 @@ export const NotFoundPage: FC<IProps> = ({
     
 }) => {
     return (
-        <div>Not Found</div>
+        <Page title='Не знайдено'></Page>
     );
 };

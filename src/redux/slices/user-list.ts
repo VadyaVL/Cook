@@ -12,10 +12,10 @@ type UserListSliceType = {
     error: string | undefined;
 };
 
-export const getUserList = createAsyncThunk<any, { limit: number; skip: number; }>(
+export const getUserList = createAsyncThunk<any, { searchTerm: string, limit: number; skip: number; }>(
     'getUserList',
-    async ({ limit, skip }, thunkAPI) => {
-        const userList = await dummyApiServiceInstance.getUserList(limit, skip);
+    async ({ searchTerm, limit, skip }, thunkAPI) => {
+        const userList = await dummyApiServiceInstance.getUserList(searchTerm, limit, skip);
         return thunkAPI.fulfillWithValue(userList)
     }
 );

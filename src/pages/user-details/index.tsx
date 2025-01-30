@@ -1,6 +1,8 @@
 import { FC, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { Page } from '../../components/page';
+import { UserDetails } from '../../components/user/user-details';
 import { getUserDetails, reset } from '../../redux/slices/user-details';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 
@@ -34,17 +36,25 @@ export const UserDetailsPage: FC<IProps> = ({
     }, [dispatch, id]);
 
     return (
-        <>
-            <div>User Page</div>
+        <Page
+            title={`Користувач # ${id}`}
+        >
+            {
+                data &&
+                <UserDetails
+                    item={data}
+                />
+            }
+
+            {/** TODO */}
             {
                 loading &&
                 <span className='list-view__loader'>Loading</span>
             }
-            <div>{data?.username}</div>
             {
                 typeof error === 'string' &&
                 <div className='list-view__error'>{error}</div>
             }
-        </>
+        </Page>
     );
 };

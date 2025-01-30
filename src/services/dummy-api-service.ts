@@ -1,3 +1,4 @@
+import { isNumeric } from '../helpers/number-helper';
 import { IAccountModel } from '../models/account';
 import { IRecipeModel, IRecipesFeedModel } from '../models/recipe';
 import { IUserModel, IUsersFeedModel } from '../models/user';
@@ -69,10 +70,22 @@ class DummyApiService {
     };
 
     public getUserList = async (
+        searchTerm: string,
         limit: number,
         skip: number
     ): Promise<IUsersFeedModel> => {
-        const response = await fetch(`${baseUrl}/users?limit=${limit}&skip=${skip}`);
+        if (isNumeric(searchTerm)) {
+            const userDetail = await this.getUserDetail(+searchTerm);
+
+            return ({
+                limit: 1,
+                skip: skip,
+                total: 1,
+                users: [userDetail],
+            });
+        }
+
+        const response = await fetch(`${baseUrl}/users/search?q=${searchTerm}&limit=${limit}&skip=${skip}`);
         const responseResult: IUsersFeedModel = await response.json();
 
         return responseResult;
@@ -88,10 +101,22 @@ class DummyApiService {
     };
 
     public getRecipeList = async (
+        searchTerm: string,
         limit: number,
         skip: number
     ): Promise<IRecipesFeedModel> => {
-        const response = await fetch(`${baseUrl}/recipes?limit=${limit}&skip=${skip}`);
+        if (isNumeric(searchTerm)) {
+            const recipeDetail = await this.getRecipeDetail(+searchTerm);
+
+            return ({
+                limit: 1,
+                skip: skip,
+                total: 1,
+                recipes: [recipeDetail],
+            });
+        }
+
+        const response = await fetch(`${baseUrl}/recipes/search?q=${searchTerm}&limit=${limit}&skip=${skip}`);
         const responseResult: IRecipesFeedModel = await response.json();
 
         return responseResult;

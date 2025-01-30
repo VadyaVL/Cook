@@ -1,7 +1,9 @@
 import { FC, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ListView } from '../../components/list-view';
+import { Page } from '../../components/page';
+import { RecipeItem } from '../../components/recipe/recipe-item';
 import { getRecipeList } from '../../redux/slices/recipe-list';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 
@@ -12,6 +14,7 @@ interface IProps {
 export const RecipesPage: FC<IProps> = ({
     
 }) => {
+    const navigate = useNavigate();
     const {
         data,
         error,
@@ -19,27 +22,27 @@ export const RecipesPage: FC<IProps> = ({
     } = useAppSelector((state) => state.recipeList);
     const dispatch = useAppDispatch();
 
-    const loadCallback = useCallback((limit: number, skip: number) => {
-        dispatch(getRecipeList({ limit, skip }))
+    const loadCallback = useCallback((searchTerm: string, limit: number, skip: number) => {
+        dispatch(getRecipeList({ searchTerm, limit, skip }))
     }, [dispatch]);
 
     return (
-        <>
-            <div>Recipes</div>
+        <Page title='Рецепти'>
             <ListView
                 isLoading={loading}
                 error={error}
                 loadCallback={loadCallback}
             >
                 {
-                    data.map(d => (
-                        <div key={d.id}>
-                            {d.name}
-                            <Link to={`/recipes/${d.id}`}>Details</Link>
-                        </div>
+                    data.map(item => (
+                        <RecipeItem
+                            key={item.id}
+                            item={item}
+                            onClick={() => navigate(`/recipes/${item.id}`)}
+                        />
                     ))
                 }
             </ListView>
-        </>
+        </Page>
     );
 };
