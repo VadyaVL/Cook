@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { getRecipeDetails, reset } from '../../redux/slices/recipe-details';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
@@ -41,6 +41,7 @@ export const RecipeDetailsPage: FC<IProps> = ({
                 <span className='list-view__loader'>Loading</span>
             }
             <div>{data?.name}</div>
+            <Link to={`/users/${data?.userId}`}>User</Link>
             {
                 typeof error === 'string' &&
                 <div className='list-view__error'>{error}</div>
