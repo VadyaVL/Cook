@@ -3,14 +3,22 @@ import { useSearchParams } from 'react-router-dom';
 
 import './index.css';
 
+import { Loader } from '../loader';
+
 interface IProps {
     isLoading: boolean;
+    isSearchAvailable?: boolean;
+    actualLimit: number;
+    total: number;
     error: string | undefined;
     loadCallback: (searchTerm: string, limit: number, skip: number) => void;
 }
 
 export const ListView: FC<PropsWithChildren<IProps>> = ({
     isLoading,
+    isSearchAvailable = true,
+    actualLimit,
+    total,
     error,
     loadCallback,
     children,
@@ -31,27 +39,33 @@ export const ListView: FC<PropsWithChildren<IProps>> = ({
 
     const onPrevClick = () => {
         if (currentPage >= 1) {
-            setSearchParams({
-                page: (currentPage - 1).toString(),
-                searchTerm: searchTerm,
-            });
+            const newSearchParams = new URLSearchParams(searchParams);
+
+            newSearchParams.set('page', (currentPage - 1).toString());
+            newSearchParams.set('searchTerm', searchTerm);
+
+            setSearchParams(newSearchParams);
             setInputSearchTerm(searchTerm);
         }
     };
 
     const onNextClick = () => {
-        setSearchParams({
-            page: (currentPage + 1).toString(),
-            searchTerm: searchTerm,
-        });
+        const newSearchParams = new URLSearchParams(searchParams);
+
+        newSearchParams.set('page', (currentPage + 1).toString());
+        newSearchParams.set('searchTerm', searchTerm);
+
+        setSearchParams(newSearchParams);
         setInputSearchTerm(searchTerm);
     };
 
     const onSearchClick = () => {
-        setSearchParams ({
-            page: '0',
-            searchTerm: inputSearchTerm,
-        });
+        const newSearchParams = new URLSearchParams(searchParams);
+
+        newSearchParams.set('page', '0');
+        newSearchParams.set('searchTerm', inputSearchTerm);
+
+        setSearchParams (newSearchParams);
     };
 
     const onSearchResetClick = () => {
@@ -64,16 +78,19 @@ export const ListView: FC<PropsWithChildren<IProps>> = ({
 
     return (
         <div className='list-view'>
-            <div className='list-view__search'>
-                <input
-                    id='searchTerm'
-                    className='input-mui'
-                    value={inputSearchTerm}
-                    onChange={({ target }) => setInputSearchTerm(target.value)}
-                />
-                <button className='btn-mui' onClick={onSearchClick}>Шукати</button>
-                <button className='btn-mui' onClick={onSearchResetClick}>Скинути</button>
-            </div>
+            {
+                isSearchAvailable &&
+                <div className='list-view__search'>
+                    <input
+                        id='searchTerm'
+                        className='input-mui'
+                        value={inputSearchTerm}
+                        onChange={({ target }) => setInputSearchTerm(target.value)}
+                    />
+                    <button className='btn-mui' onClick={onSearchClick}>Шукати</button>
+                    <button className='btn-mui' onClick={onSearchResetClick}>Скинути</button>
+                </div>
+            }
 
             <div className='list-view__items'>
                 {children}
@@ -90,18 +107,12 @@ export const ListView: FC<PropsWithChildren<IProps>> = ({
                 <button
                     className='btn-mui'
                     onClick={onNextClick}
+                    disabled={(currentPage * limit + actualLimit) >= total}
                 >
                     Наступна сторінка
                 </button>
             </div>
-
-            {
-                isLoading &&
-                <div className='list-view__loader'>
-                    <span>Loading...</span>
-                </div>
-            }
-
+            <Loader isLoading={isLoading} />
             {
                 typeof error === 'string' &&
                 <div className='list-view__error'>

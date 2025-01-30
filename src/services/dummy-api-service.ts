@@ -102,6 +102,7 @@ class DummyApiService {
 
     public getRecipeList = async (
         searchTerm: string,
+        tag: string,
         limit: number,
         skip: number
     ): Promise<IRecipesFeedModel> => {
@@ -114,6 +115,11 @@ class DummyApiService {
                 total: 1,
                 recipes: [recipeDetail],
             });
+        } else if (tag) {
+            const response = await fetch(`${baseUrl}/recipes/tag/${tag}?limit=${limit}&skip=${skip}`);
+            const responseResult: IRecipesFeedModel = await response.json();
+
+            return responseResult;
         }
 
         const response = await fetch(`${baseUrl}/recipes/search?q=${searchTerm}&limit=${limit}&skip=${skip}`);

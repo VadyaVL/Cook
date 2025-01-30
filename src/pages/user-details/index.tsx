@@ -5,6 +5,7 @@ import { Page } from '../../components/page';
 import { UserDetails } from '../../components/user/user-details';
 import { getUserDetails, reset } from '../../redux/slices/user-details';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { Loader } from '../../components/loader';
 
 
 interface IProps {
@@ -18,7 +19,7 @@ export const UserDetailsPage: FC<IProps> = ({
 
     const {
         data,
-        error,
+        //error,
         loading,
     } = useAppSelector((state) => state.userDetails);
     const dispatch = useAppDispatch();
@@ -45,16 +46,7 @@ export const UserDetailsPage: FC<IProps> = ({
                     item={data}
                 />
             }
-
-            {/** TODO */}
-            {
-                loading &&
-                <span className='list-view__loader'>Loading</span>
-            }
-            {
-                typeof error === 'string' &&
-                <div className='list-view__error'>{error}</div>
-            }
+            <Loader isLoading={loading} />
         </Page>
     );
 };

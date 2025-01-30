@@ -4,7 +4,7 @@ import { IRecipeModel, IRecipesFeedModel } from '../../models/recipe';
 import { dummyApiServiceInstance } from '../../services/dummy-api-service';
 
 type RecipeListSliceType = {
-    limit: number;
+    actualLimit: number;
     skip: number;
     total: number;
     data: IRecipeModel[];
@@ -12,10 +12,10 @@ type RecipeListSliceType = {
     error: string | undefined;
 };
 
-export const getRecipeList = createAsyncThunk<any, { searchTerm: string, limit: number; skip: number; }>(
+export const getRecipeList = createAsyncThunk<any, { searchTerm: string; tag: string, limit: number; skip: number; }>(
     'getRecipeList',
-    async ({ searchTerm, limit, skip }, thunkAPI) => {
-        const recipeList = await dummyApiServiceInstance.getRecipeList(searchTerm, limit, skip);
+    async ({ searchTerm, tag, limit, skip }, thunkAPI) => {
+        const recipeList = await dummyApiServiceInstance.getRecipeList(searchTerm, tag, limit, skip);
         return thunkAPI.fulfillWithValue(recipeList)
     }
 );
@@ -23,7 +23,7 @@ export const getRecipeList = createAsyncThunk<any, { searchTerm: string, limit: 
 export const recipeListSlice = createSlice({
     name: 'recipeList',
     initialState: {
-        limit: 0,
+        actualLimit: 0,
         skip: 0,
         total: 0,
         data: [],
@@ -40,7 +40,7 @@ export const recipeListSlice = createSlice({
             })
             .addCase(getRecipeList.fulfilled, (state, action: PayloadAction<IRecipesFeedModel>) => {
                 state.loading = false;
-                //state.limit = action.payload.limit;
+                state.actualLimit = action.payload.limit;
                 state.skip = action.payload.skip;
                 state.total = action.payload.total;
                 state.data = action.payload.recipes;

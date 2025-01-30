@@ -4,7 +4,7 @@ import { IUserModel, IUsersFeedModel } from '../../models/user';
 import { dummyApiServiceInstance } from '../../services/dummy-api-service';
 
 type UserListSliceType = {
-    limit: number;
+    actualLimit: number;
     skip: number;
     total: number;
     data: IUserModel[];
@@ -23,7 +23,7 @@ export const getUserList = createAsyncThunk<any, { searchTerm: string, limit: nu
 export const userListSlice = createSlice({
     name: 'userList',
     initialState: {
-        limit: 0,
+        actualLimit: 0,
         skip: 0,
         total: 0,
         data: [],
@@ -40,7 +40,7 @@ export const userListSlice = createSlice({
             })
             .addCase(getUserList.fulfilled, (state, action: PayloadAction<IUsersFeedModel>) => {
                 state.loading = false;
-                //state.limit = action.payload.limit;
+                state.actualLimit = action.payload.limit;
                 state.skip = action.payload.skip;
                 state.total = action.payload.total;
                 state.data = action.payload.users;

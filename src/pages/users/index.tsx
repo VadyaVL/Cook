@@ -17,6 +17,8 @@ export const UsersPage: FC<IProps> = ({
     const navigate = useNavigate();
     const {
         data,
+        actualLimit,
+        total,
         error,
         loading,
     } = useAppSelector((state) => state.userList);
@@ -34,6 +36,8 @@ export const UsersPage: FC<IProps> = ({
                 isLoading={loading}
                 error={error}
                 loadCallback={loadCallback}
+                actualLimit={actualLimit}
+                total={total}
             >
                 {
                     data.map(item => (

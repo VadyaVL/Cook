@@ -3,6 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 
 import { getRecipeDetails, reset } from '../../redux/slices/recipe-details';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { Loader } from '../../components/loader';
+import { Page } from '../../components/page';
+import { RecipeDetails } from '../../components/recipe/recipe-details';
 
 
 interface IProps {
@@ -16,7 +19,7 @@ export const RecipeDetailsPage: FC<IProps> = ({
 
     const {
         data,
-        error,
+        //error,
         loading,
     } = useAppSelector((state) => state.recipeDetails);
     const dispatch = useAppDispatch();
@@ -34,18 +37,14 @@ export const RecipeDetailsPage: FC<IProps> = ({
     }, [dispatch, id]);
 
     return (
-        <>
-            <div>Recipe Page</div>
+        <Page title={`Рецепт: ${id}`}>
             {
-                loading &&
-                <span className='list-view__loader'>Loading</span>
+                data &&
+                <RecipeDetails
+                    item={data}
+                />
             }
-            <div>{data?.name}</div>
-            <Link to={`/users/${data?.userId}`}>User</Link>
-            {
-                typeof error === 'string' &&
-                <div className='list-view__error'>{error}</div>
-            }
-        </>
+            <Loader isLoading={loading} />
+        </Page>
     );
 };

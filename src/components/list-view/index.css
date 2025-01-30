@@ -12,22 +12,8 @@
     margin-bottom: 16px;
 }
 
-.list-view__loader {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: #80808080;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-}
-
 .list-view__error {
-
+    color: red;
 }
 
 .list-view__navigation {

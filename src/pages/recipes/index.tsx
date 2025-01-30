@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { ListView } from '../../components/list-view';
 import { Page } from '../../components/page';
@@ -15,15 +15,20 @@ export const RecipesPage: FC<IProps> = ({
     
 }) => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const tag = searchParams.get('tag') || '';
+
     const {
         data,
+        actualLimit,
+        total,
         error,
         loading,
     } = useAppSelector((state) => state.recipeList);
     const dispatch = useAppDispatch();
 
     const loadCallback = useCallback((searchTerm: string, limit: number, skip: number) => {
-        dispatch(getRecipeList({ searchTerm, limit, skip }))
+        dispatch(getRecipeList({ searchTerm, tag, limit, skip }))
     }, [dispatch]);
 
     return (
@@ -32,6 +37,9 @@ export const RecipesPage: FC<IProps> = ({
                 isLoading={loading}
                 error={error}
                 loadCallback={loadCallback}
+                isSearchAvailable={!tag} // if there is tag - search doesn't work
+                actualLimit={actualLimit}
+                total={total}
             >
                 {
                     data.map(item => (

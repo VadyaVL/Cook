@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import './navigation.css';
 
@@ -12,6 +12,7 @@ interface IProps {
 export const Navigation: FC<IProps> = ({
     
 }) => {
+    const { pathname } = useLocation();
     const [active, setActive] = useState<string>('/');
     const {
         isAuthorized,
@@ -53,10 +54,10 @@ export const Navigation: FC<IProps> = ({
         <nav className='nav-mui'>
             <ul>
                 {
-                    items.map(item => (
+                    items.map((item, index) => (
                         <li
-                            //className={item.path === active ? 'active' : ''}
-                            id={item.title}
+                            className={pathname.includes(item.path) && index > 0 ? 'active' : ''}
+                            key={`${item.title}-${index}`}
                         >
                             <Link
                                 to={item.path}
