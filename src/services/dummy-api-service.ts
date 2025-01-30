@@ -1,6 +1,6 @@
 import { IAccountModel } from '../models/account';
-import { IUsersFeedModel } from '../models/feeds';
-import { IUserModel } from '../models/user';
+import { IRecipeModel, IRecipesFeedModel } from '../models/recipe';
+import { IUserModel, IUsersFeedModel } from '../models/user';
 
 interface ISignInResponse extends IAccountModel {
     accessToken: string;
@@ -83,6 +83,25 @@ class DummyApiService {
     ): Promise<IUserModel> => {
         const response = await fetch(`${baseUrl}/users/${id}`);
         const responseResult: IUserModel = await response.json();
+
+        return responseResult;
+    };
+
+    public getRecipeList = async (
+        limit: number,
+        skip: number
+    ): Promise<IRecipesFeedModel> => {
+        const response = await fetch(`${baseUrl}/recipes?limit=${limit}&skip=${skip}`);
+        const responseResult: IRecipesFeedModel = await response.json();
+
+        return responseResult;
+    };
+
+    public getRecipeDetail = async (
+        id: number
+    ): Promise<IRecipeModel> => {
+        const response = await fetch(`${baseUrl}/recipes/${id}`);
+        const responseResult: IRecipeModel = await response.json();
 
         return responseResult;
     };

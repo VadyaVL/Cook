@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '../components/layout';
 import { HomePage } from '../pages/home';
 import { NotFoundPage } from '../pages/not-found';
+import { RecipeDetailsPage } from '../pages/recipe-details';
 import { RecipesPage } from '../pages/recipes';
 import { SignInPage } from '../pages/sign-in';
 import { SignOutPage } from '../pages/sign-out';
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
             {
                 path: 'recipes',
                 element: <RecipesPage />,
+            },
+            {
+                path: 'recipes/:id',
+                element: <RecipeDetailsPage />,
             },
         ],
     },

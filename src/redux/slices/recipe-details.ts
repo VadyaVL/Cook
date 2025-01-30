@@ -1,29 +1,29 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { IUserModel } from '../../models/user';
+import { IRecipeModel } from '../../models/recipe';
 import { dummyApiServiceInstance } from '../../services/dummy-api-service';
 
-type UserDetailsSliceType = {
-    data: IUserModel | undefined;
+type RecipeDetailsSliceType = {
+    data: IRecipeModel | undefined;
     loading: boolean;
     error: string | undefined;
 };
 
-export const getUserDetails = createAsyncThunk<any, number>(
-    'getUserDetails',
+export const getRecipeDetails = createAsyncThunk<any, number>(
+    'getRecipeDetails',
     async (id, thunkAPI) => {
-        const userDetails = await dummyApiServiceInstance.getUserDetail(id);
-        return thunkAPI.fulfillWithValue(userDetails)
+        const recipeDetails = await dummyApiServiceInstance.getRecipeDetail(id);
+        return thunkAPI.fulfillWithValue(recipeDetails)
     }
 );
 
-export const userDetailsSlice = createSlice({
-    name: 'userDetails',
+export const recipeDetailsSlice = createSlice({
+    name: 'recipeDetails',
     initialState: {
         data: undefined,
         loading: false,
         error: undefined,
-    } as UserDetailsSliceType,
+    } as RecipeDetailsSliceType,
     reducers: {
         reset: (state) => {
             state.data = undefined;
@@ -33,14 +33,14 @@ export const userDetailsSlice = createSlice({
     },
     extraReducers: builder => {
         return builder
-            .addCase(getUserDetails.pending, (state) => {
+            .addCase(getRecipeDetails.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(getUserDetails.fulfilled, (state, action: PayloadAction<IUserModel>) => {
+            .addCase(getRecipeDetails.fulfilled, (state, action: PayloadAction<IRecipeModel>) => {
                 state.loading = false;
                 state.data = action.payload;
             })
-            .addCase(getUserDetails.rejected, (state, action) => {
+            .addCase(getRecipeDetails.rejected, (state, action) => {
                 state.loading = false;
                 state.data = undefined;
                 state.error = action.error.message;
@@ -48,4 +48,4 @@ export const userDetailsSlice = createSlice({
     },
 });
 
-export const { reset } = userDetailsSlice.actions;
+export const { reset } = recipeDetailsSlice.actions;

@@ -1,3 +1,5 @@
+import { IFeedModel } from './feeds';
+
 export interface IUserModel {
     id: number;
     firstName: string;
@@ -68,4 +70,8 @@ export interface ICrypto {
     coin: string;
     wallet: string;
     network: string;
+}
+
+export interface IUsersFeedModel extends IFeedModel {
+    users: IUserModel[];
 }

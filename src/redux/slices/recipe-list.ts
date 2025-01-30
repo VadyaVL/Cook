@@ -1,27 +1,27 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { IUserModel, IUsersFeedModel } from '../../models/user';
+import { IRecipeModel, IRecipesFeedModel } from '../../models/recipe';
 import { dummyApiServiceInstance } from '../../services/dummy-api-service';
 
-type UserListSliceType = {
+type RecipeListSliceType = {
     limit: number;
     skip: number;
     total: number;
-    data: IUserModel[];
+    data: IRecipeModel[];
     loading: boolean;
     error: string | undefined;
 };
 
-export const getUserList = createAsyncThunk<any, { limit: number; skip: number; }>(
-    'getUserList',
+export const getRecipeList = createAsyncThunk<any, { limit: number; skip: number; }>(
+    'getRecipeList',
     async ({ limit, skip }, thunkAPI) => {
-        const userList = await dummyApiServiceInstance.getUserList(limit, skip);
-        return thunkAPI.fulfillWithValue(userList)
+        const recipeList = await dummyApiServiceInstance.getRecipeList(limit, skip);
+        return thunkAPI.fulfillWithValue(recipeList)
     }
 );
 
-export const userListSlice = createSlice({
-    name: 'userList',
+export const recipeListSlice = createSlice({
+    name: 'recipeList',
     initialState: {
         limit: 0,
         skip: 0,
@@ -29,23 +29,23 @@ export const userListSlice = createSlice({
         data: [],
         loading: false,
         error: undefined,
-    } as UserListSliceType,
+    } as RecipeListSliceType,
     reducers: {
         
     },
     extraReducers: builder => {
         return builder
-            .addCase(getUserList.pending, (state) => {
+            .addCase(getRecipeList.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(getUserList.fulfilled, (state, action: PayloadAction<IUsersFeedModel>) => {
+            .addCase(getRecipeList.fulfilled, (state, action: PayloadAction<IRecipesFeedModel>) => {
                 state.loading = false;
                 //state.limit = action.payload.limit;
                 state.skip = action.payload.skip;
                 state.total = action.payload.total;
-                state.data = action.payload.users;
+                state.data = action.payload.recipes;
             })
-            .addCase(getUserList.rejected, (state, action) => {
+            .addCase(getRecipeList.rejected, (state, action) => {
                 state.loading = false;
                 state.data = [];
                 state.error = action.error.message;
@@ -53,4 +53,4 @@ export const userListSlice = createSlice({
     },
 });
 
-export const { } = userListSlice.actions;
+export const { } = recipeListSlice.actions;
