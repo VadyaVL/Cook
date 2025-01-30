@@ -1,8 +1,8 @@
 import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { signOut } from '../../redux/slices/account';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 
 interface IProps {
 
@@ -11,16 +11,16 @@ interface IProps {
 export const SignOutPage: FC<IProps> = ({
     
 }) => {
-    const isAutorized = useAppSelector((state) => state.account.isAutorized);
+    const isAuthorized = useAppSelector((state) => state.account.isAuthorized);
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (isAutorized) return;
+        if (isAuthorized) return;
 
         navigate('/', { replace: true });
-    }, [navigate, isAutorized]);
+    }, [navigate, isAuthorized]);
 
     return (
         <div>

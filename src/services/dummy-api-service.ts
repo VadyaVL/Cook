@@ -1,13 +1,15 @@
 import { IAccountModel } from '../models/account';
+import { IUsersFeedModel } from '../models/feeds';
 import { IUserModel } from '../models/user';
 
-interface ISignInRequest extends IAccountModel {
+interface ISignInResponse extends IAccountModel {
     accessToken: string;
     refreshToken: string;
 };
 
 const baseUrl = 'https://dummyjson.com';
 
+// TODO: auth into localStorage?
 class DummyApiService {
     private accessToken: string | undefined = undefined;
     private refreshToken: string | undefined = undefined;
@@ -17,9 +19,21 @@ class DummyApiService {
     }
 
     public signIn = async (username: string, password: string): Promise<IAccountModel> => {
-        const response1 = await fetch(`${baseUrl}/users?skip=0`);
-
-
+        const mockResponse: ISignInResponse = {
+            id: 1,
+            firstName: 'Olesia',
+            lastName: 'Lytvyn',
+            email: 'olytvyn@gmail.com',
+            gender: 'female',
+            image: 'https://dummyjson.com/icon/emilys/128',
+            username: 'OLytvyn',
+            accessToken: undefined as any as string,
+            refreshToken: undefined as any as string,
+        };
+        
+        // Notes: here we have CORS issue, so just let's simulate
+        return mockResponse;
+        /*
         const response = await fetch(`${baseUrl}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -31,31 +45,44 @@ class DummyApiService {
             credentials: 'include',
         });
 
-        const result: ISignInRequest = await response.json();
+        const result: ISignInResponse = await response.json();
 
         this.accessToken = result.accessToken;
         this.refreshToken = result.refreshToken;
 
         return result;
+        */
     };
 
     public getAccountInformation = async (): Promise<IAccountModel> => {
         const response = await fetch(`${baseUrl}/auth/me`, {
             method: 'GET',
-            headers: {
+            headers: this.accessToken ? {
                 Authorization: `Bearer ${this.accessToken}`,
-            }, 
+            } : undefined, 
             credentials: 'include',
         });
 
-        const result: ISignInRequest = await response.json();
+        const result: ISignInResponse = await response.json();
 
         return result;
     };
 
-    public getUserList = async (): Promise<Array<IUserModel>> => {
-        const response = await fetch(`${baseUrl}/`);
-        const responseResult: Array<IUserModel> = await response.json();
+    public getUserList = async (
+        limit: number,
+        skip: number
+    ): Promise<IUsersFeedModel> => {
+        const response = await fetch(`${baseUrl}/users?limit=${limit}&skip=${skip}`);
+        const responseResult: IUsersFeedModel = await response.json();
+
+        return responseResult;
+    };
+
+    public getUserDetail = async (
+        id: number
+    ): Promise<IUserModel> => {
+        const response = await fetch(`${baseUrl}/users/${id}`);
+        const responseResult: IUserModel = await response.json();
 
         return responseResult;
     };

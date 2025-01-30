@@ -1,11 +1,11 @@
-import { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { ISignInArgs } from '../../models/requests/sign-in-request';
 import { signIn } from '../../redux/slices/account';
-import { ISignInArgs } from '../../models/sign-in-request';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { SignInValidator } from '../../validators/sign-in';
 
 interface IProps {
@@ -15,7 +15,7 @@ interface IProps {
 export const SignInPage: FC<IProps> = ({
     
 }) => {
-    const isAutorized = useAppSelector((state) => state.account.isAutorized);
+    const isAuthorized = useAppSelector((state) => state.account.isAuthorized);
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -28,19 +28,19 @@ export const SignInPage: FC<IProps> = ({
         resolver: joiResolver(SignInValidator)
     });
 
-    const createHendler = (args: ISignInArgs) => {
+    const createHandler = (args: ISignInArgs) => {
         dispatch(signIn(args))
     };
 
     useEffect(() => {
-        if (!isAutorized) return;
+        if (!isAuthorized) return;
 
         navigate('/', { replace: true });
-    }, [navigate, isAutorized]);
+    }, [navigate, isAuthorized]);
 
     return (
         <div>
-            <form onSubmit={handleSubmit(createHendler)}>
+            <form onSubmit={handleSubmit(createHandler)}>
                 <div>
                     <input type='text' {...register('username')}/>
                     <div>{errors.username?.message}</div>

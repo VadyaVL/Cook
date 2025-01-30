@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { dummyApiServiceInstance } from '../../services/dummy-api-service';
 import { IAccountModel } from '../../models/account';
-import { ISignInArgs } from '../../models/sign-in-request';
+import { ISignInArgs } from '../../models/requests/sign-in-request';
+import { dummyApiServiceInstance } from '../../services/dummy-api-service';
 
 type AccountSliceType = {
-    isAutorized: boolean;
+    isAuthorized: boolean;
     data: IAccountModel | undefined;
     loading: boolean;
     error: string | undefined;
@@ -19,20 +19,32 @@ export const signIn = createAsyncThunk<any, ISignInArgs>(
     }
 );
 
+const LOCAL_STORAGE_KEY = 'account-information';
+
 export const accountSlice = createSlice({
     name: 'account',
     initialState: {
-        isAutorized: false,
+        isAuthorized: false,
         data: undefined,
         loading: false,
         error: undefined,
     } as AccountSliceType,
     reducers: {
+        initialize: (state) => {
+            const jsonData = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+            if (typeof jsonData === 'string') {
+                state.data = JSON.parse(jsonData);
+                state.isAuthorized = true;
+            }
+        },
         signOut: (state) => {
-            state.isAutorized = false;
+            state.isAuthorized = false;
             state.data = undefined;
             state.loading = false;
             state.error = undefined;
+
+            localStorage.removeItem(LOCAL_STORAGE_KEY);
         },
     },
     extraReducers: builder => {
@@ -43,7 +55,9 @@ export const accountSlice = createSlice({
             .addCase(signIn.fulfilled, (state, action: PayloadAction<IAccountModel>) => {
                 state.loading = false;
                 state.data = action.payload;
-                state.isAutorized = true;
+                state.isAuthorized = true;
+
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(action.payload));
             })
             .addCase(signIn.rejected, (state, action) => {
                 state.loading = false;
@@ -53,4 +67,4 @@ export const accountSlice = createSlice({
     },
 });
 
-export const { signOut } = accountSlice.actions;
+export const { initialize, signOut } = accountSlice.actions;

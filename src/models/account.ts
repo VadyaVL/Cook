@@ -4,6 +4,6 @@ export interface IAccountModel {
     email: string;
     firstName: string;
     lastName: string;
-    gender: string;
+    gender: 'female' | 'male';
     image: string;
 }

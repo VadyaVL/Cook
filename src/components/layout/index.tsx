@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../../redux/store';
 
 interface IProps {
@@ -9,7 +9,7 @@ interface IProps {
 export const Layout: FC<IProps> = ({
     
 }) => {
-    const { isAutorized } = useAppSelector((state) => state.account);
+    const { isAuthorized } = useAppSelector((state) => state.account);
 
     return (
         <div>
@@ -17,7 +17,7 @@ export const Layout: FC<IProps> = ({
                 <nav>
                 <ul>
                     {
-                        isAutorized ?
+                        isAuthorized ?
                         <>
                             <li><Link to='/'>Додом</Link></li>
                             <li><Link to='/users'>Користувачі</Link></li>
